@@ -113,8 +113,8 @@
   <!-- HOME -->
   <div id="homePage" class="page">
     <div class="text-center mb-8">
-      <img src="assets/logo.png" alt="Logo" class="mx-auto mb-4" style="width:150px;">
-      <h2 class="text-3xl font-bold text-rose-300">Gestão Studio Sa Lopes</h2>
+      <img src="assets/logo.png" alt="Logo" class="mx-auto mb-4" style="width:400px;">
+      <h2 class="text-3xl font-bold text-rose-300" style="display:none;">Gestão Studio Sa Lopes</h2>
     </div>
 
     <div class="grid grid-cols-3 gap-5 mb-5">
@@ -139,75 +139,51 @@
   <!-- CLIENTES -->
   <div id="clientesPage" class="page hidden">
     <div class="flex justify-between mb-5 items-center">
-      <h2 class="text-2xl font-bold text-rose-300">Clientes</h2>
+      <h2 class="text-2xl font-bold text-rose-300 ml-4">Clientes</h2>
+      <button id="btnAdicionarCliente" class="btn-primary px-4 py-2 rounded-md mr-4">Adicionar Cliente</button>
     </div>
-    <table class="min-w-full bg-[#2b2b2b] rounded-xl shadow overflow-hidden">
-      <thead class="bg-[#3a3a3a] text-rose-300">
-        <tr>
-          <th class="p-2 text-left">Nome</th>
-          <th class="p-2">Telefone</th>
-          <th class="p-2">Último Atendimento</th>
-          <th class="p-2">Próximo Atendimento</th>
-          <th class="p-2">Ações</th>
-        </tr>
-      </thead>
-      <tbody id="listaClientes"></tbody>
-    </table>
-      <!-- Modal Cadastro Anamnese -->
-      <div id="modalAnamnese" class="modal flex">
-        <div class="modal-content">
-          <h2 class="text-2xl font-bold mb-4 text-rose-300">Cadastro de Anamnese</h2>
-          <form id="formAnamnese" class="space-y-4">
-            <div>
-              <label class="block mb-1 font-semibold" for="anamneseNome">Nome</label>
-              <input type="text" id="anamneseNome" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-            </div>
-            <div>
-              <label class="block mb-1 font-semibold" for="anamneseCpf">CPF</label>
-              <input type="text" id="anamneseCpf" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-            </div>
-            <div>
-              <label class="block mb-1 font-semibold" for="anamneseEndereco">Endereço</label>
-              <input type="text" id="anamneseEndereco" name="endereco" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-            </div>
-            <div>
-              <label class="block mb-1 font-semibold" for="anamneseTelefone">Telefone</label>
-              <input type="text" id="anamneseTelefone" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-            </div>
-            <div class="flex justify-end gap-3 mt-6">
-              <button type="button" id="fecharModalAnamnese" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
-              <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
   </div>
 
   <!-- AGENDA -->
   <div id="agendaPage" class="page hidden">
     <div class="flex justify-between mb-5 items-center">
-      <h2 class="text-2xl font-bold text-rose-300">Agenda</h2>
-      <button id="btnAnamnese" class="btn-primary px-4 py-2 rounded-md">Adicionar Anamnese</button>
+      <h2 class="text-2xl font-bold text-rose-300 ml-4">Agenda</h2>
+      <button id="btnAnamnese" class="btn-primary px-4 py-2 rounded-md mr-4">Adicionar Anamnese</button>
     </div>
     <div id="calendarAgenda" class="w-full" style="height: 600px;"></div>
+    <!-- Modal Cadastro Anamnese -->
+    <div id="modalAnamnese" class="modal flex">
+      <div class="modal-content">
+        <h2 class="text-2xl font-bold mb-4 text-rose-300">Cadastro de Anamnese</h2>
+        <form id="formAnamnese" class="space-y-4">
+          <div>
+            <label class="block mb-1 font-semibold" for="anamneseNome">Nome</label>
+            <input type="text" id="anamneseNome" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold" for="anamneseCpf">CPF</label>
+            <input type="text" id="anamneseCpf" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold" for="anamneseEndereco">Endereço</label>
+            <input type="text" id="anamneseEndereco" name="endereco" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold" for="anamneseTelefone">Telefone</label>
+            <input type="text" id="anamneseTelefone" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+          </div>
+          <div class="flex justify-end gap-3 mt-6">
+            <button type="button" id="fecharModalAnamnese" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
+            <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- FINANCEIRO -->
   <div id="financeiroPage" class="page hidden">
-    <h2 class="text-2xl font-bold mb-5 text-rose-300">Financeiro</h2>
-    <table class="min-w-full bg-[#2b2b2b] rounded-xl shadow overflow-hidden">
-      <thead class="bg-[#3a3a3a] text-rose-300">
-        <tr>
-          <th class="p-2">Data Registro</th>
-          <th class="p-2">Tipo</th>
-          <th class="p-2">Tipo2</th>
-          <th class="p-2">Tipo3</th>
-          <th class="p-2">Valor</th>
-          <th class="p-2">Data Contábil</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaFinanceiro"></tbody>
-    </table>
+    <h2 class="text-2xl font-bold mb-5 text-rose-300 ml-4">Financeiro</h2>
   </div>
 </main>
 
@@ -217,8 +193,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxpyfXV8w9bLT2QZJNSjHQy
 document.addEventListener("DOMContentLoaded", function() {
   const sidebar = document.getElementById("sidebar");
   const menuBtn = document.getElementById("menuBtn");
-  // O botão sempre permanece rosa
-  menuBtn.classList.add("bg-rose-400");
   menuBtn.addEventListener("click", function(e) {
     sidebar.classList.toggle("hidden");
     e.stopPropagation();
@@ -243,42 +217,27 @@ document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll(".sidebar a").forEach(x=>x.classList.remove("active"));
       a.classList.add("active");
       if(a.dataset.page==="clientes") carregarClientes();
+      if(a.dataset.page==="home") renderHomeCalendar();
     });
   });
-  
-    // Torna o botão "Adicionar Anamnese" clicável
-    const btnAnamnese = document.getElementById("btnAnamnese");
-    if (btnAnamnese) {
-        btnAnamnese.addEventListener("click", function() {
-          document.getElementById("modalAnamnese").style.display = "flex";
-        });
+
+  let homeCalendar;
+  function renderHomeCalendar() {
+    const calendarEl = document.getElementById("calendar");
+    if (!calendarEl) return;
+    if (homeCalendar) {
+      homeCalendar.destroy();
     }
-
-    // Fechar modal
-    document.getElementById("fecharModalAnamnese").addEventListener("click", function() {
-      document.getElementById("modalAnamnese").style.display = "none";
+    homeCalendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      dateClick: info => {
+        const nome = prompt("Nome do Cliente:");
+        if (nome) addAgendamento(info.dateStr, nome);
+      }
     });
-
-    // Submeter formulário
-    document.getElementById("formAnamnese").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const nome = document.getElementById("anamneseNome").value;
-      const cpf = document.getElementById("anamneseCpf").value;
-      const endereco = document.getElementById("anamneseEndereco").value;
-      const telefone = document.getElementById("anamneseTelefone").value;
-      alert(`Dados cadastrados:\nNome: ${nome}\nCPF: ${cpf}\nEndereço: ${endereco}\nTelefone: ${telefone}`);
-      document.getElementById("modalAnamnese").style.display = "none";
-      document.getElementById("formAnamnese").reset();
-    });
-
-  const homeCalendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
-    initialView:"dayGridMonth",
-    dateClick: info=>{
-      const nome=prompt("Nome do Cliente:");
-      if(nome) addAgendamento(info.dateStr, nome);
-    }
-  });
-  homeCalendar.render();
+    homeCalendar.render();
+  }
+  renderHomeCalendar();
 
   const agendaCalendar = new FullCalendar.Calendar(document.getElementById("calendarAgenda"), {
     initialView:"dayGridMonth"

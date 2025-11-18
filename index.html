@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão Studio Sa Lopes</title>
+
+<!-- Tailwind CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<!-- FullCalendar -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.global.min.js"></script>
+
+<!-- Manifest (PWA) -->
+<link rel="manifest" href="manifest.json">
+
+<style>
+  :root {
+    --fundo: #1e1e1e;
+    --rose: #f4bfae;
+    --texto: #ffffff;
+  }
+
+  body {
+    background-color: var(--fundo);
+    color: var(--texto);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .sidebar {
+    background-color: #111111;
+    color: var(--rose);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: var(--rose);
+    text-decoration: none;
+    margin-bottom: 4px;
+    transition: background 0.2s;
+  }
+
+  .sidebar a:hover, .sidebar a.active {
+    background-color: var(--rose);
+    color: #111111;
+  }
+
+  .sidebar.hidden { transform: translateX(-100%); }
+
+  .card {
+    background-color: #2b2b2b;
+    color: var(--rose);
+    border: 1px solid #3a3a3a;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 50;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    justify-content: center; align-items: center;
+  }
+
+  .modal-content {
+    background: #2b2b2b;
+    color: var(--rose);
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90%;
+    overflow-y: auto;
+  }
+
+  .btn-primary {
+    background-color: var(--rose);
+    color: #111;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #ffd2c2;
+  }
+</style>
+</head>
+<body class="flex h-screen">
+
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar w-64 p-5 flex flex-col fixed inset-y-0 left-0 z-40 hidden">
+  <h1 class="text-2xl font-semibold mb-8 text-center">💅 Studio Sa Lopes</h1>
+  <nav class="flex flex-col space-y-2">
+    <a href="#" class="active" data-page="home">Home</a>
+    <a href="#" data-page="clientes">Clientes</a>
+    <a href="#" data-page="agenda">Agenda</a>
+    <a href="#" data-page="financeiro">Financeiro</a>
+  </nav>
+</aside>
+
+<!-- Botão de menu -->
+<button id="menuBtn" class="absolute top-5 left-5 bg-rose-400 text-black p-2 rounded-md shadow-md z-50">☰</button>
+
+<!-- Conteúdo principal -->
+<main class="flex-1 p-10 overflow-y-auto ml-0 md:ml-64">
+
+  <!-- HOME -->
+  <div id="homePage" class="page">
+    <div class="text-center mb-8">
+      <img src="assets/logo.png" alt="Logo" class="mx-auto mb-4" style="width:150px;">
+      <h2 class="text-3xl font-bold text-rose-300">Gestão Studio Sa Lopes</h2>
+    </div>
+
+    <div class="grid grid-cols-3 gap-5 mb-5">
+      <div class="card p-5 rounded-xl shadow flex items-center justify-center font-bold text-lg" id="atendimentos">Atendimentos: 0</div>
+      <div class="card p-5 rounded-xl shadow flex items-center justify-center font-bold text-lg" id="agendamentos">Agendamentos: 0</div>
+      <div class="card p-5 rounded-xl shadow grid grid-rows-2 text-center font-bold">
+        <div id="primeiraVez">Primeira Vez: 0</div>
+        <div id="manutencao">Manutenções: 0</div>
+      </div>
+    </div>
+
+    <div class="card rounded-xl shadow p-5 mb-5">
+      <div id="calendar" class="w-full" style="height: 400px;"></div>
+    </div>
+
+    <div class="card rounded-xl shadow p-5 flex flex-col justify-center" id="resumoFinanceiro">
+      <h3 class="text-lg font-bold mb-2">Resumo Financeiro do Mês</h3>
+      <div id="resumoValores">Receita: R$0 | Despesa: R$0 | Saldo: R$0</div>
+    </div>
+  </div>
+
+  <!-- CLIENTES -->
+  <div id="clientesPage" class="page hidden">
+    <div class="flex justify-between mb-5 items-center">
+      <h2 class="text-2xl font-bold text-rose-300">Clientes</h2>
+      <button id="btnAnamnese" class="btn-primary px-4 py-2 rounded-md">Adicionar Anamnese</button>
+    </div>
+    <table class="min-w-full bg-[#2b2b2b] rounded-xl shadow overflow-hidden">
+      <thead class="bg-[#3a3a3a] text-rose-300">
+        <tr>
+          <th class="p-2 text-left">Nome</th>
+          <th class="p-2">Telefone</th>
+          <th class="p-2">Último Atendimento</th>
+          <th class="p-2">Próximo Atendimento</th>
+          <th class="p-2">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="listaClientes"></tbody>
+    </table>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="agendaPage" class="page hidden">
+    <h2 class="text-2xl font-bold mb-5 text-rose-300">Agenda</h2>
+    <div id="calendarAgenda" class="w-full" style="height: 600px;"></div>
+  </div>
+
+  <!-- FINANCEIRO -->
+  <div id="financeiroPage" class="page hidden">
+    <h2 class="text-2xl font-bold mb-5 text-rose-300">Financeiro</h2>
+    <table class="min-w-full bg-[#2b2b2b] rounded-xl shadow overflow-hidden">
+      <thead class="bg-[#3a3a3a] text-rose-300">
+        <tr>
+          <th class="p-2">Data Registro</th>
+          <th class="p-2">Tipo</th>
+          <th class="p-2">Tipo2</th>
+          <th class="p-2">Tipo3</th>
+          <th class="p-2">Valor</th>
+          <th class="p-2">Data Contábil</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaFinanceiro"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxpyfXV8w9bLT2QZJNSjHQyV0DKKAE4N4YJ3iZWBXQUlNY_BzvHSbCGvIlXyv2e1r2P/exec";
+
+document.addEventListener("DOMContentLoaded", function() {
+  const sidebar = document.getElementById("sidebar");
+  document.getElementById("menuBtn").addEventListener("click", ()=> sidebar.classList.toggle("hidden"));
+  const pages = document.querySelectorAll(".page");
+  document.querySelectorAll(".sidebar a").forEach(a=>{
+    a.addEventListener("click", e=>{
+      e.preventDefault();
+      pages.forEach(p=>p.classList.add("hidden"));
+      document.getElementById(a.dataset.page+"Page").classList.remove("hidden");
+      document.querySelectorAll(".sidebar a").forEach(x=>x.classList.remove("active"));
+      a.classList.add("active");
+      if(a.dataset.page==="clientes") carregarClientes();
+    });
+  });
+
+  const homeCalendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
+    initialView:"dayGridMonth",
+    dateClick: info=>{
+      const nome=prompt("Nome do Cliente:");
+      if(nome) addAgendamento(info.dateStr, nome);
+    }
+  });
+  homeCalendar.render();
+
+  const agendaCalendar = new FullCalendar.Calendar(document.getElementById("calendarAgenda"), {
+    initialView:"dayGridMonth"
+  });
+  agendaCalendar.render();
+
+  async function addAgendamento(data, cliente){
+    const agendamento={tipo:"agendamento",data,hora:"09:00",cliente,servico:"Cílios"};
+    await fetch(API_URL,{method:"POST",body:JSON.stringify(agendamento),headers:{"Content-Type":"application/json"}});
+    alert("✅ Agendamento salvo!");
+    atualizarHome();
+  }
+
+  async function atualizarHome(){
+    const res=await fetch(API_URL);
+    const data=await res.json();
+    document.getElementById("atendimentos").innerText=`Atendimentos: ${data.agendamentos?.length||0}`;
+  }
+
+  async function carregarClientes(){
+    const res = await fetch(`${API_URL}?tipo=clientes`);
+    const data = await res.json();
+    const tabela = document.getElementById("listaClientes");
+    tabela.innerHTML = "";
+    data.forEach(cli=>{
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td class="p-2 text-left font-semibold">${cli.Nome||"-"}</td>
+        <td class="p-2">${cli.Telefone||"-"}</td>
+        <td class="p-2">${cli.Ultimo||"-"}</td>
+        <td class="p-2">${cli.Proximo||"-"}</td>
+        <td class="p-2 flex gap-3 justify-center">
+          <span class="text-green-400 cursor-pointer" onclick="window.open('https://wa.me/55${cli.Telefone}','_blank')">📱</span>
+          <span class="text-blue-400 cursor-pointer" onclick="alert('Anamnese de ${cli.Nome}')">📋</span>
+          <span class="text-red-500 cursor-pointer" onclick="alert('Excluir ${cli.Nome}?')">🗑️</span>
+        </td>`;
+      tabela.appendChild(linha);
+    });
+  }
+});
+</script>
+</body>
+</html>

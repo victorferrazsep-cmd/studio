@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestão Studio Sa Lopes</title>
 
@@ -11,6 +12,9 @@
 <!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.global.min.js"></script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- Manifest (PWA) -->
 <link rel="manifest" href="manifest.json">
@@ -99,6 +103,7 @@
     <a href="#" data-page="clientes">Clientes</a>
     <a href="#" data-page="agenda">Agenda</a>
     <a href="#" data-page="financeiro">Financeiro</a>
+    <a href="#" data-page="configuracoes">Configurações</a>
   </nav>
 </aside>
 
@@ -131,7 +136,7 @@
     </div>
 
     <div class="card rounded-xl shadow p-5 flex flex-col justify-center" id="resumoFinanceiro">
-      <h3 class="text-lg font-bold mb-4">Resumo Financeiro do Mês</h3>
+      <h3 class="text-lg font-bold mb-4">Financeiro</h3>
       <div class="grid grid-cols-3 gap-5">
         <div class="card p-5 rounded-xl shadow flex items-center justify-center font-bold text-lg" id="resumoReceita">Receita: R$0</div>
         <div class="card p-5 rounded-xl shadow flex items-center justify-center font-bold text-lg" id="resumoDespesa">Despesa: R$0</div>
@@ -146,42 +151,139 @@
       <h2 class="text-2xl font-bold text-rose-300 ml-4">Clientes</h2>
       <button id="btnAdicionarCliente" class="btn-primary px-4 py-2 rounded-md mr-4">Adicionar Cliente</button>
     </div>
+    <div class="mb-5 ml-4">
+      <label class="block mb-2 font-semibold text-rose-300">Filtro por Status:</label>
+      <div class="flex gap-4">
+        <label class="flex items-center">
+          <input type="radio" name="filtroStatus" value="todos" checked class="mr-2">
+          Todos
+        </label>
+        <label class="flex items-center">
+          <input type="radio" name="filtroStatus" value="Ativo" class="mr-2">
+          Ativo
+        </label>
+        <label class="flex items-center">
+          <input type="radio" name="filtroStatus" value="Inativo" class="mr-2">
+          Inativo
+        </label>
+      </div>
+    </div>
+    <div id="boxCliente" class="card rounded-xl shadow p-5 mt-6 max-w-xl mx-auto hidden">
+      <h2 id="tituloCliente" class="text-xl font-bold mb-4 text-rose-300">Cadastro de Cliente</h2>
+      <form id="formCliente" class="space-y-4">
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteNome">NOME</label>
+          <input type="text" id="clienteNome" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteCpf">CPF</label>
+          <input type="text" id="clienteCpf" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteTelefone">TELEFONE</label>
+          <input type="text" id="clienteTelefone" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteDn">DN</label>
+          <input type="date" id="clienteDn" name="dn" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteEnderecoNum">ENDEREÇO_NUM</label>
+          <input type="text" id="clienteEnderecoNum" name="endereco_num" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteCep">CEP</label>
+          <input type="text" id="clienteCep" name="cep" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteInstagram">INSTAGRAM</label>
+          <input type="text" id="clienteInstagram" name="instagram" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300">
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="clienteStatus">STATUS</label>
+          <select id="clienteStatus" name="status" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" id="fecharBoxCliente" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
+          <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
+        </div>
+      </form>
+    </div>
+    <div class="mt-6 ml-4">
+      <div id="listaClientes" class="space-y-4">
+      </div>
+    </div>
   </div>
 
   <!-- AGENDA -->
   <div id="agendaPage" class="page hidden">
     <div class="flex justify-between mb-5 items-center">
       <h2 class="text-2xl font-bold text-rose-300 ml-4">Agenda</h2>
-      <button id="btnAnamnese" class="btn-primary px-4 py-2 rounded-md mr-4">Adicionar Anamnese</button>
+      <div class="relative mr-4">
+        <button id="btnAnamnese" class="btn-primary px-4 py-2 rounded-md">Adicionar Anamnese</button>
+        <div id="boxAnamnese" class="absolute right-0 mt-2 w-96 card rounded-xl shadow p-5 z-50 hidden">
+          <h2 class="text-xl font-bold mb-4 text-rose-300">Cadastro de Anamnese</h2>
+          <form id="formAnamneseBox" class="space-y-4">
+            <div>
+              <label class="block mb-1 font-semibold" for="anamneseNomeBox">Nome</label>
+              <input type="text" id="anamneseNomeBox" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold" for="anamneseCpfBox">CPF</label>
+              <input type="text" id="anamneseCpfBox" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold" for="anamneseEnderecoBox">Endereço</label>
+              <input type="text" id="anamneseEnderecoBox" name="endereco" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold" for="anamneseTelefoneBox">Telefone</label>
+              <input type="text" id="anamneseTelefoneBox" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold" for="anamneseEmailBox">Email</label>
+              <input type="email" id="anamneseEmailBox" name="email" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+              <button type="button" id="fecharBoxAnamnese" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
+              <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <div id="calendarAgenda" class="w-full" style="height: 600px;"></div>
-    <!-- Modal Cadastro Anamnese -->
-    <div id="modalAnamnese" class="modal flex">
-      <div class="modal-content">
-        <h2 class="text-2xl font-bold mb-4 text-rose-300">Cadastro de Anamnese</h2>
-        <form id="formAnamnese" class="space-y-4">
-          <div>
-            <label class="block mb-1 font-semibold" for="anamneseNome">Nome</label>
-            <input type="text" id="anamneseNome" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-          </div>
-          <div>
-            <label class="block mb-1 font-semibold" for="anamneseCpf">CPF</label>
-            <input type="text" id="anamneseCpf" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-          </div>
-          <div>
-            <label class="block mb-1 font-semibold" for="anamneseEndereco">Endereço</label>
-            <input type="text" id="anamneseEndereco" name="endereco" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-          </div>
-          <div>
-            <label class="block mb-1 font-semibold" for="anamneseTelefone">Telefone</label>
-            <input type="text" id="anamneseTelefone" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
-          </div>
-          <div class="flex justify-end gap-3 mt-6">
-            <button type="button" id="fecharModalAnamnese" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
-            <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
-          </div>
-        </form>
-      </div>
+    <div id="boxAnamnese" class="card rounded-xl shadow p-5 mt-6 max-w-xl mx-auto hidden">
+      <h2 class="text-xl font-bold mb-4 text-rose-300">Cadastro de Anamnese</h2>
+      <form id="formAnamneseBox" class="space-y-4">
+        <div>
+          <label class="block mb-1 font-semibold" for="anamneseNomeBox">Nome</label>
+          <input type="text" id="anamneseNomeBox" name="nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="anamneseCpfBox">CPF</label>
+          <input type="text" id="anamneseCpfBox" name="cpf" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="anamneseEnderecoBox">Endereço</label>
+          <input type="text" id="anamneseEnderecoBox" name="endereco" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="anamneseTelefoneBox">Telefone</label>
+          <input type="text" id="anamneseTelefoneBox" name="telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold" for="anamneseEmailBox">Email</label>
+          <input type="email" id="anamneseEmailBox" name="email" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" id="fecharBoxAnamnese" class="btn-primary px-4 py-2 rounded-md">Fechar</button>
+          <button type="submit" class="btn-primary px-4 py-2 rounded-md">Salvar</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -189,12 +291,202 @@
   <div id="financeiroPage" class="page hidden">
     <h2 class="text-2xl font-bold mb-5 text-rose-300 ml-4">Financeiro</h2>
   </div>
+
+  <!-- CONFIGURAÇÕES -->
+  <div id="configuracoesPage" class="page hidden">
+    <h2 class="text-2xl font-bold mb-5 text-rose-300 ml-4">Configurações</h2>
+    <div class="card rounded-xl shadow p-5 max-w-xl mx-auto">
+      <h3 class="text-lg font-bold mb-4">Gerenciamento de Arquivos</h3>
+      <div class="mb-4">
+        <button id="selectDirBtn" class="btn-primary px-4 py-2 rounded-md">Selecionar Diretório</button>
+        <p id="selectedDir" class="mt-2 text-sm">Diretório selecionado: Nenhum</p>
+      </div>
+      <div class="mb-4">
+        <button id="exportCSVBtn" class="btn-primary px-4 py-2 rounded-md">Exportar Clientes para CSV</button>
+      </div>
+      <div class="mb-4">
+        <input type="file" id="importCSVInput" accept=".csv" class="hidden">
+        <button id="importCSVBtn" class="btn-primary px-4 py-2 rounded-md">Importar Clientes de CSV</button>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxpyfXV8w9bLT2QZJNSjHQyV0DKKAE4N4YJ3iZWBXQUlNY_BzvHSbCGvIlXyv2e1r2P/exec";
 
+let editingIndex = -1;
+
+function salvarCliente(cliente) {
+  let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+  if (editingIndex >= 0) {
+    clientes[editingIndex] = cliente;
+    editingIndex = -1;
+  } else {
+    clientes.push(cliente);
+  }
+  localStorage.setItem('clientes', JSON.stringify(clientes));
+}
+
+function editarCliente(index) {
+  let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+  const cli = clientes[index];
+  document.getElementById('clienteNome').value = cli.nome || '';
+  document.getElementById('clienteCpf').value = cli.cpf || '';
+  document.getElementById('clienteTelefone').value = cli.telefone || '';
+  document.getElementById('clienteDn').value = cli.dn || '';
+  document.getElementById('clienteEnderecoNum').value = cli.endereco_num || '';
+  document.getElementById('clienteCep').value = cli.cep || '';
+  document.getElementById('clienteInstagram').value = cli.instagram || '';
+  document.getElementById('clienteStatus').value = cli.status || 'Ativo';
+  document.getElementById('tituloCliente').textContent = 'Editar Cliente';
+  editingIndex = index;
+  document.getElementById('boxCliente').classList.remove('hidden');
+}
+
+function excluirCliente(index) {
+  if (confirm('Tem certeza que deseja excluir este cliente?')) {
+    let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+    clientes.splice(index, 1);
+    localStorage.setItem('clientes', JSON.stringify(clientes));
+    carregarClientes();
+  }
+}
+
+function carregarClientes(){
+  let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+  let filteredClientes = [...clientes];
+  const filtro = document.querySelector('input[name="filtroStatus"]:checked').value;
+  if (filtro !== 'todos') {
+    filteredClientes = clientes.filter(cli => cli.status === filtro);
+  }
+  const container = document.getElementById("listaClientes");
+  container.innerHTML = "";
+  filteredClientes.forEach((cli)=>{
+    const originalIndex = clientes.indexOf(cli);
+    const card = document.createElement("div");
+    card.className = "flex items-center bg-[#2b2b2b] text-[#f5c5b5] shadow-md rounded-xl p-4 w-full max-w-3xl mb-4";
+    card.innerHTML = `
+      <!-- Esquerda: Avatar e informações -->
+      <div class="flex items-center gap-4 flex-1">
+        <!-- Avatar -->
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#f5c5b5] text-[#1e1e1e] text-xl font-semibold border-2 border-[#f5c5b5]">
+          ${cli.nome ? cli.nome.charAt(0).toUpperCase() : 'U'}
+        </div>
+
+        <!-- Informações -->
+        <div>
+          <h2 class="font-semibold text-[#f5c5b5]">${cli.nome || 'Nome não informado'} <span class="inline-block w-3 h-3 rounded-full ${cli.status === 'Ativo' ? 'bg-green-500' : 'bg-red-500'}"></span></h2>
+          <div class="text-xs text-[#f5c5b5]/80">
+            <p>
+              <span class="block">${cli.instagram ? '@' + cli.instagram : 'Instagram não informado'}</span>
+              <span class="block">📞 ${cli.telefone || 'Telefone não informado'}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Centro: Dados adicionais -->
+      <div class="text-xs text-[#f5c5b5] text-right flex-1 mx-4">
+        <p>${cli.dn ? new Date(cli.dn).toLocaleDateString('pt-BR') : 'DN não informado'} &nbsp;&nbsp;&nbsp; CEP ${cli.cep || 'não informado'}</p>
+        <p>${cli.endereco_num || 'Endereço não informado'}</p>
+      </div>
+
+      <!-- Direita: Botões -->
+      <div class="w-1/5 flex flex-col gap-2">
+        <div class="grid grid-cols-2 gap-1">
+          <!-- WhatsApp -->
+          <button class="flex items-center justify-center bg-[#2b2b2b] hover:bg-[#3a3a3a] text-[#f5c5b5] rounded-full p-2 text-xs" onclick="window.open('https://wa.me/55${cli.telefone}','_blank')">
+            <i class="fab fa-whatsapp text-[#f5c5b5]"></i>
+          </button>
+
+          <!-- Editar -->
+          <button class="flex items-center justify-center bg-[#2b2b2b] hover:bg-[#3a3a3a] text-[#f5c5b5] rounded-md p-2 text-xs" onclick="editarCliente(${originalIndex})">
+            <i class="fas fa-edit text-[#f5c5b5]"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <!-- Excluir -->
+          <button class="flex items-center justify-center bg-[#2b2b2b] hover:bg-[#3a3a3a] text-[#f5c5b5] rounded-md p-2 text-xs" onclick="excluirCliente(${originalIndex})">
+            <i class="fas fa-trash text-[#f5c5b5]"></i>
+          </button>
+
+          <!-- Anamnese -->
+          <button class="flex items-center justify-center bg-[#f5c5b5]/20 hover:bg-[#f5c5b5]/30 text-[#f5c5b5] rounded-md p-2 text-xs" onclick="alert('Anamnese de ${cli.nome}')">
+            <i class="fas fa-clipboard text-[#f5c5b5]"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+    // Lógica para mostrar/esconder o formulário dentro do botão
+    const btnAnamnese = document.getElementById("btnAnamnese");
+    const boxAnamnese = document.getElementById("boxAnamnese");
+    btnAnamnese.addEventListener("click", function(e) {
+      e.stopPropagation();
+      boxAnamnese.classList.toggle("hidden");
+    });
+    document.addEventListener("click", function(e) {
+      if (!boxAnamnese.classList.contains("hidden")) {
+        const isClickInside = boxAnamnese.contains(e.target) || btnAnamnese.contains(e.target);
+        if (!isClickInside) boxAnamnese.classList.add("hidden");
+      }
+    });
+    document.getElementById("fecharBoxAnamnese").addEventListener("click", function() {
+      boxAnamnese.classList.add("hidden");
+    });
+    document.getElementById("formAnamneseBox").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("✅ Anamnese salva!");
+      boxAnamnese.classList.add("hidden");
+      this.reset();
+    });
+    // Lógica para mostrar/esconder o formulário de cliente
+    const btnAdicionarCliente = document.getElementById("btnAdicionarCliente");
+    const boxCliente = document.getElementById("boxCliente");
+    btnAdicionarCliente.addEventListener("click", function(e) {
+      e.stopPropagation();
+      editingIndex = -1;
+      document.getElementById('formCliente').reset();
+      document.getElementById('tituloCliente').textContent = 'Cadastro de Cliente';
+      boxCliente.classList.toggle("hidden");
+    });
+    document.addEventListener("click", function(e) {
+      if (!boxCliente.classList.contains("hidden")) {
+        const isClickInside = boxCliente.contains(e.target) || btnAdicionarCliente.contains(e.target);
+        if (!isClickInside) boxCliente.classList.add("hidden");
+      }
+    });
+    document.getElementById("fecharBoxCliente").addEventListener("click", function() {
+      boxCliente.classList.add("hidden");
+    });
+    document.getElementById("formCliente").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const cliente = {
+        nome: formData.get('nome'),
+        cpf: formData.get('cpf'),
+        telefone: formData.get('telefone'),
+        dn: formData.get('dn'),
+        endereco_num: formData.get('endereco_num'),
+        cep: formData.get('cep'),
+        instagram: formData.get('instagram'),
+        status: formData.get('status')
+      };
+      salvarCliente(cliente);
+      alert("✅ Cliente salvo!");
+      boxCliente.classList.add("hidden");
+      this.reset();
+      carregarClientes();
+    });
+    // Filtros de status
+    document.querySelectorAll('input[name="filtroStatus"]').forEach(radio => {
+      radio.addEventListener('change', carregarClientes);
+    });
   const sidebar = document.getElementById("sidebar");
   const menuBtn = document.getElementById("menuBtn");
   menuBtn.addEventListener("click", function(e) {
@@ -261,26 +553,74 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("atendimentos").innerText=`Atendimentos: ${data.agendamentos?.length||0}`;
   }
 
-  async function carregarClientes(){
-    const res = await fetch(`${API_URL}?tipo=clientes`);
-    const data = await res.json();
-    const tabela = document.getElementById("listaClientes");
-    tabela.innerHTML = "";
-    data.forEach(cli=>{
-      const linha = document.createElement("tr");
-      linha.innerHTML = `
-        <td class="p-2 text-left font-semibold">${cli.Nome||"-"}</td>
-        <td class="p-2">${cli.Telefone||"-"}</td>
-        <td class="p-2">${cli.Ultimo||"-"}</td>
-        <td class="p-2">${cli.Proximo||"-"}</td>
-        <td class="p-2 flex gap-3 justify-center">
-          <span class="text-green-400 cursor-pointer" onclick="window.open('https://wa.me/55${cli.Telefone}','_blank')">📱</span>
-          <span class="text-blue-400 cursor-pointer" onclick="alert('Anamnese de ${cli.Nome}')">📋</span>
-          <span class="text-red-500 cursor-pointer" onclick="alert('Excluir ${cli.Nome}?')">🗑️</span>
-        </td>`;
-      tabela.appendChild(linha);
-    });
-  }
+  // Configurações - Gerenciamento de Arquivos
+  let selectedDirHandle = null;
+
+  document.getElementById("selectDirBtn").addEventListener("click", async () => {
+    try {
+      if ('showDirectoryPicker' in window) {
+        selectedDirHandle = await window.showDirectoryPicker();
+        document.getElementById("selectedDir").textContent = `Diretório selecionado: ${selectedDirHandle.name}`;
+      } else {
+        alert("Seu navegador não suporta seleção de diretório. Use um navegador moderno como Chrome.");
+      }
+    } catch (err) {
+      console.error("Erro ao selecionar diretório:", err);
+    }
+  });
+
+  document.getElementById("exportCSVBtn").addEventListener("click", () => {
+    const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+    if (clientes.length === 0) {
+      alert("Nenhum cliente para exportar.");
+      return;
+    }
+    const csvContent = "Nome,CPF,Telefone,DN,Endereco_Num,CEP,Instagram,Status\n" +
+      clientes.map(cli => `"${cli.nome || ''}","${cli.cpf || ''}","${cli.telefone || ''}","${cli.dn || ''}","${cli.endereco_num || ''}","${cli.cep || ''}","${cli.instagram || ''}","${cli.status || ''}"`).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'clientes.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert("✅ CSV exportado!");
+  });
+
+  document.getElementById("importCSVBtn").addEventListener("click", () => {
+    document.getElementById("importCSVInput").click();
+  });
+
+  document.getElementById("importCSVInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const csv = event.target.result;
+      const lines = csv.split('\n');
+      const headers = lines[0].split(',');
+      const clientes = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',');
+        if (values.length >= 8) {
+          clientes.push({
+            nome: values[0].replace(/"/g, ''),
+            cpf: values[1].replace(/"/g, ''),
+            telefone: values[2].replace(/"/g, ''),
+            dn: values[3].replace(/"/g, ''),
+            endereco_num: values[4].replace(/"/g, ''),
+            cep: values[5].replace(/"/g, ''),
+            instagram: values[6].replace(/"/g, ''),
+            status: values[7].replace(/"/g, '')
+          });
+        }
+      }
+      localStorage.setItem('clientes', JSON.stringify(clientes));
+      carregarClientes();
+      alert("✅ Clientes importados!");
+    };
+    reader.readAsText(file);
+  });
 });
 </script>
 </body>

@@ -1,0 +1,4 @@
+- [x] Conectar ao MongoDB no server.js
+- [x] Definir modelo Client
+- [x] Adicionar rotas CRUD para /clientes
+- [ ] Reiniciar o servidor para testar

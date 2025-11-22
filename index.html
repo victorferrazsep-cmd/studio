@@ -104,6 +104,7 @@
     <a href="#" data-page="agenda">Agenda</a>
     <a href="#" data-page="financeiro">Financeiro</a>
     <a href="#" data-page="configuracoes">Configurações</a>
+    <a href="#" data-page="teste">Teste</a>
   </nav>
 </aside>
 
@@ -113,7 +114,7 @@
 </button>
 
 <!-- Conteúdo principal -->
-<main class="flex-1 p-10 overflow-y-auto ml-0 md:ml-64">
+<main class="flex-1 p-10 overflow-y-auto ml-0">
 
   <!-- HOME -->
   <div id="homePage" class="page">
@@ -310,10 +311,34 @@
       </div>
     </div>
   </div>
+
+  <!-- TESTE -->
+  <div id="testePage" class="page hidden">
+    <h2 class="text-2xl font-bold mb-5 text-rose-300 ml-4">Teste</h2>
+    <button id="btnAdicionarTeste" class="btn-primary px-4 py-2 rounded-md ml-4">Adicionar</button>
+    <div id="boxTeste" class="card rounded-xl shadow p-5 mt-6 max-w-xl mx-auto hidden">
+      <form id="formClienteTeste" style="color:#f5c5b5; background:#2b2b2b; padding:20px; border-radius:12px; max-width:400px; font-family:sans-serif;">
+        <h3 style="margin-bottom:16px;">Cadastro de Cliente</h3>
+
+        <label>Nome:</label><br>
+        <input type="text" id="nomeTeste" required style="width:100%; margin-bottom:12px; padding:8px; border-radius:6px; border:none; background:#3a3a3a; color:#f5c5b5;"><br>
+
+        <label>CPF:</label><br>
+        <input type="text" id="cpfTeste" required style="width:100%; margin-bottom:12px; padding:8px; border-radius:6px; border:none; background:#3a3a3a; color:#f5c5b5;"><br>
+
+        <label>Telefone:</label><br>
+        <input type="tel" id="telefoneTeste" required style="width:100%; margin-bottom:16px; padding:8px; border-radius:6px; border:none; background:#3a3a3a; color:#f5c5b5;"><br>
+
+        <button type="submit" style="background:#f5c5b5; color:#1e1e1e; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:bold;">
+          Enviar
+        </button>
+      </form>
+    </div>
+  </div>
 </main>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxpyfXV8w9bLT2QZJNSjHQyV0DKKAE4N4YJ3iZWBXQUlNY_BzvHSbCGvIlXyv2e1r2P/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwQgU1f3RyZGJfZ7oEbFlo5RnJPkGkRy9yqwFiH24X3uMSAflP7Q6dGicu9swYS7HiKuQ/exec";
 
 let editingIndex = -1;
 
@@ -482,6 +507,35 @@ document.addEventListener("DOMContentLoaded", function() {
       boxCliente.classList.add("hidden");
       this.reset();
       carregarClientes();
+    });
+    // Lógica para mostrar/esconder o formulário de teste
+    const btnAdicionarTeste = document.getElementById("btnAdicionarTeste");
+    const boxTeste = document.getElementById("boxTeste");
+    btnAdicionarTeste.addEventListener("click", function(e) {
+      e.stopPropagation();
+      boxTeste.classList.toggle("hidden");
+    });
+    document.addEventListener("click", function(e) {
+      if (!boxTeste.classList.contains("hidden")) {
+        const isClickInside = boxTeste.contains(e.target) || btnAdicionarTeste.contains(e.target);
+        if (!isClickInside) boxTeste.classList.add("hidden");
+      }
+    });
+    document.getElementById("formClienteTeste").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {
+        nome: document.getElementById("nomeTeste").value,
+        cpf: document.getElementById("cpfTeste").value,
+        telefone: document.getElementById("telefoneTeste").value
+      };
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(data => alert("✅ Enviado com sucesso!"))
+      .catch(err => alert("❌ Erro ao enviar: " + err.message));
     });
     // Filtros de status
     document.querySelectorAll('input[name="filtroStatus"]').forEach(radio => {

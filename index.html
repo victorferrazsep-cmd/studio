@@ -338,7 +338,7 @@
 </main>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwQgU1f3RyZGJfZ7oEbFlo5RnJPkGkRy9yqwFiH24X3uMSAflP7Q6dGicu9swYS7HiKuQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyrQlcKg1G6S24Cb7Hw9774O7yjMpvEf1Cce8DNjcEt1U27iVVq5SUAlRJFxWJwiFBaVw/exec";
 
 let editingIndex = -1;
 
@@ -528,14 +528,15 @@ document.addEventListener("DOMContentLoaded", function() {
         cpf: document.getElementById("cpfTeste").value,
         telefone: document.getElementById("telefoneTeste").value
       };
-      fetch(API_URL, {
+      // Proxy que remove bloqueio de CORS
+      const proxyURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(API_URL);
+      fetch(proxyURL, {
         method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       })
-      .then(res => res.json())
-      .then(data => alert("✅ Enviado com sucesso!"))
-      .catch(err => alert("❌ Erro ao enviar: " + err.message));
+      .then(() => alert("✅ Enviado com sucesso!"))
+      .catch(() => alert("❌ Erro ao enviar"));
     });
     // Filtros de status
     document.querySelectorAll('input[name="filtroStatus"]').forEach(radio => {

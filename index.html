@@ -291,6 +291,25 @@
   <!-- FINANCEIRO -->
   <div id="financeiroPage" class="page hidden">
     <h2 class="text-2xl font-bold mb-5 text-rose-300 ml-4">Financeiro</h2>
+    <div class="card rounded-xl shadow p-5 mt-6 max-w-xl mx-auto">
+        <form class="space-y-4">
+            <div>
+                <label class="block mb-1 font-semibold" for="financeiroNome">NOME</label>
+                <input type="text" id="financeiroNome" name="Nome" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+                <label class="block mb-1 font-semibold" for="financeiroCPF">CPF</label>
+                <input type="text" id="financeiroCPF" name="CPF" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div>
+                <label class="block mb-1 font-semibold" for="financeiroTelefone">TELEFONE</label>
+                <input type="text" id="financeiroTelefone" name="Telefone" class="w-full p-2 rounded bg-[#1e1e1e] border border-rose-300 text-rose-300" required>
+            </div>
+            <div class="flex justify-end mt-6">
+                <button type="submit" class="btn-primary px-4 py-2 rounded-md">Enviar</button>
+            </div>
+        </form>
+    </div>
   </div>
 
   <!-- CONFIGURAÇÕES -->
@@ -538,6 +557,31 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(() => alert("✅ Enviado com sucesso!"))
       .catch(() => alert("❌ Erro ao enviar"));
     });
+
+    // Lógica para o formulário Financeiro
+    const formFinanceiro = document.getElementById("financeiroPage").querySelector('form');
+    formFinanceiro.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {
+        Nome: document.getElementById("financeiroNome").value,
+        CPF: document.getElementById("financeiroCPF").value,
+        Telefone: document.getElementById("financeiroTelefone").value
+      };
+      const financeiroApiUrl = "https://api.sheetbest.com/sheets/8846f338-a3ea-446c-894b-31fc8ada7191";
+      const proxyURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(financeiroApiUrl);
+      
+      fetch(proxyURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        alert("✅ Enviado com sucesso!");
+        formFinanceiro.reset();
+      })
+      .catch(() => alert("❌ Erro ao enviar"));
+    });
+    
     // Filtros de status
     document.querySelectorAll('input[name="filtroStatus"]').forEach(radio => {
       radio.addEventListener('change', carregarClientes);
